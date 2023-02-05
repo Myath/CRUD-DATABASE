@@ -19,7 +19,7 @@ import (
 var sessionManager *scs.SessionManager
 
 func main() {
-	tableMigration := `
+	schema := `
     CREATE TABLE IF NOT EXISTS students (
 		id BIGSERIAL,
         name TEXT NOT NULL,
@@ -36,10 +36,9 @@ func main() {
 
 		PRIMARY KEY(id),
 		UNIQUE(email)
-    );`
+    );
 
-	adminTableMigration := `
-    CREATE TABLE IF NOT EXISTS admin (
+	CREATE TABLE IF NOT EXISTS admin (
 		id BIGSERIAL,
         username TEXT NOT NULL,
 		password TEXT NOT NULL,
@@ -48,7 +47,16 @@ func main() {
 		PRIMARY KEY(id),
 		UNIQUE(username)
 
-    );`
+    );
+
+	CREATE TABLE IF NOT EXISTS sessions (
+		token TEXT PRIMARY KEY,
+		data BYTEA NOT NULL,
+		expiry TIMESTAMPTZ NOT NULL
+	);
+	
+	CREATE INDEX IF NOT EXISTS sessions_expiry_idx ON sessions (expiry);
+	`
 
 	config := viper.NewWithOptions(
 		viper.EnvKeyReplacer(
@@ -58,19 +66,11 @@ func main() {
 	config.SetConfigFile("env/config")
 	config.SetConfigType("ini")
 	config.AutomaticEnv()
-
 	if err := config.ReadInConfig(); err != nil {
 		log.Fatalf("error loading configuration: %v", err)
 	}
 
-	lt := config.GetDuration("session.lifetime")
-	it := config.GetDuration("session.idletime")
-	sessionManager = scs.New()
-	sessionManager.Lifetime = lt * time.Hour
-	sessionManager.IdleTimeout = it * time.Minute
-	sessionManager.Cookie.Name = "web-session"
-	sessionManager.Cookie.HttpOnly = true
-	sessionManager.Cookie.Secure = true
+	decoder := form.NewDecoder()
 
 	db, err := sqlx.Connect("postgres", fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
 		config.GetString("database.host"),
@@ -84,7 +84,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	res := db.MustExec(tableMigration)
+	res := db.MustExec(schema)
 	row, err := res.RowsAffected()
 	if err != nil {
 		log.Fatalln(err)
@@ -93,18 +93,18 @@ func main() {
 	if row < 0 {
 		log.Fatalln("failed to run schema")
 	}
+
+	lt := config.GetDuration("session.lifetime")
+	it := config.GetDuration("session.idletime")
+	sessionManager = scs.New()
+	sessionManager.Lifetime = lt * time.Hour
+	sessionManager.IdleTimeout = it * time.Minute
+	sessionManager.Cookie.Name = "web-session"
+	sessionManager.Cookie.HttpOnly = true
+	sessionManager.Cookie.Secure = true
+	sessionManager.Store = NewSQLXStore(db)
+
 	
-	resAd := db.MustExec(adminTableMigration)
-	rowAd, err := resAd.RowsAffected()
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	if rowAd < 0 {
-		log.Fatalln("failed to run schema")
-	}
-
-	decoder := form.NewDecoder()
 	chi := handler.NewHandler(sessionManager, decoder, db)
 	p := config.GetInt("server.port")
 
