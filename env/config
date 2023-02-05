@@ -1,0 +1,14 @@
+[server]
+port=3000
+
+[session]
+lifetime=24
+idletime=20
+
+[database]
+host=127.0.0.1
+port=5432
+dbname=students_management
+user=postgres
+password=secret
+sslmode=disable

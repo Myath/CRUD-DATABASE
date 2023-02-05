@@ -1,0 +1,33 @@
+         
+                <div class="col-md-6">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" name="name" placeholder="Input name" value="{{.Name}}">
+                    <p style="color: rgb(255, 0, 0);">{{ .FormError.Name }}</p>
+                </div>
+                <div class="col-md-6">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" name="email" placeholder="Input email" value="{{.Email}}">
+                    <p style="color: rgb(255, 0, 0);">{{ .FormError.Email }}</p>
+                </div>
+                <div class="col-md-6">
+                    <label for="roll" class="form-label">Roll</label>
+                    <input type="number" class="form-control" name="roll" placeholder="Input roll" value="{{.Roll}}">
+                    <p style="color: rgb(255, 0, 0);">{{ .FormError.Roll }}</p>
+                </div>
+                <div class="col-md-6">
+                    <label for="eng" class="form-label">English</label>
+                    <input type="number" class="form-control" name="eng" placeholder="Input mark" value="{{.English}}">
+                    <p style="color: rgb(255, 0, 0);">{{ .FormError.English }}</p>
+                </div>
+                <div class="col-md-6">
+                    <label for="ban" class="form-label">Bangla</label>
+                    <input type="number" class="form-control" name="ban" placeholder="Input mark" value="{{.Bangla}}">
+                    <p style="color: rgb(255, 0, 0);">{{ .FormError.Bangla }}</p>
+                </div>
+                <div class="col-md-6">
+                    <label for="math" class="form-label">Mathematics</label>
+                    <input type="number" class="form-control" name="math" placeholder="Input mark" value="{{.Mathematics}}">
+                    <p style="color: rgb(255, 0, 0);">{{ .FormError.Mathematics }}</p>
+                </div>
+                
+                <div class="col-12">

@@ -1,0 +1,20 @@
+{{template "header.html"}}
+            <form class="row g-3" action="/adminLogin" method="POST">
+                <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+                
+                <div class="col-md-6">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" name="username" value="{{.Username}}">
+                    <p style="color: rgb(255, 0, 0);">{{ .FormError.Username }}</p>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" name="password">
+                    <p style="color: rgb(255, 0, 0);">{{ .FormError.Password }}</p>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </div>
+            </form>
+{{template "footer.html"}}
