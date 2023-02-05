@@ -15,10 +15,10 @@ func (h Handler) DeleteStudent(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	const deleteUserQuery = `
+	const deleteQuery = `
 	DELETE FROM students where id = $1`
 
-	res := h.db.MustExec(deleteUserQuery, uID)
+	res := h.db.MustExec(deleteQuery, uID)
 
 	if ok, err := res.RowsAffected(); err != nil || ok == 0 {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
