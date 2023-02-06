@@ -6,12 +6,12 @@
                 </div>
                 <div class="col-md-6">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" name="email" placeholder="Input email" value="{{.Email}}">
+                    <input type="email" class="form-control" {{if .ID}} readonly="" {{end}} name="email" placeholder="Input email" value="{{.Email}}">
                     <p style="color: rgb(255, 0, 0);">{{ .FormError.Email }}</p>
                 </div>
                 <div class="col-md-6">
                     <label for="roll" class="form-label">Roll</label>
-                    <input type="number" class="form-control" name="roll" placeholder="Input roll" value="{{.Roll}}">
+                    <input type="number" class="form-control" {{if .ID}} readonly="" {{end}} name="roll" placeholder="Input roll" value="{{.Roll}}">
                     <p style="color: rgb(255, 0, 0);">{{ .FormError.Roll }}</p>
                 </div>
                 <div class="col-md-6">
@@ -29,5 +29,21 @@
                     <input type="number" class="form-control" name="math" placeholder="Input mark" value="{{.Mathematics}}">
                     <p style="color: rgb(255, 0, 0);">{{ .FormError.Mathematics }}</p>
                 </div>
+
+                {{if gt .ID 0}}
+                <div class="col-md-6">
+                    <label for="status" class="form-label">Status</label>
+                    <br>
+                    <label for="active">
+                    <input type="radio" name="status" value="true" {{if .Status}}checked{{end}}>
+                    Active
+                    </label>
+                    <label for="inactive">
+                    <input type="radio" name="status" value="false"{{if not .Status}}checked{{end}}>
+                    Inactive
+                    </label>
+                    <p style="color: rgb(255, 0, 0);">{{ .FormError.Status }}</p>
+                </div>
+                {{end}}
                 
                 <div class="col-12">

@@ -30,6 +30,7 @@ func main() {
 		mathematics INT NOT NULL,
 		grade TEXT,
 		gpa FLOAT,
+		status BOOLEAN DEFAULT TRUE,
 		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 		deleted_at TIMESTAMP DEFAULT NULL,

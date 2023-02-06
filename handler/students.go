@@ -21,6 +21,7 @@ type Student struct {
 	Mathematics int              `db:"mathematics" form:"math"`
 	Grade       string           `db:"grade" form:"-"`
 	GPA         float64          `db:"gpa" form:"-"`
+	Status      bool             `db:"status" form:"status"`
 	CreatedAt   time.Time        `db:"created_at" form:"-"`
 	UpdatedAt   time.Time        `db:"updated_at" form:"-"`
 	DeletedAt   sql.NullTime     `db:"deleted_at" form:"-"`
@@ -33,7 +34,7 @@ type StudentList struct {
 }
 
 func (h Handler) StudentsList(w http.ResponseWriter, r *http.Request) {
-	const listQuery = `SELECT * FROM students`
+	const listQuery = `SELECT * FROM students WHERE deleted_at IS NULL`
 	var student []Student
 
 	if err := h.db.Select(&student, listQuery); err != nil {

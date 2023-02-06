@@ -4,8 +4,8 @@ import (
 	"errors"
 	"log"
 
-	validation "github.com/go-ozzo/ozzo-validation"
-	"github.com/go-ozzo/ozzo-validation/is"
+	validation "github.com/go-ozzo/ozzo-validation/v4"
+	"github.com/go-ozzo/ozzo-validation/v4/is"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -68,11 +68,11 @@ func (s Student) Validate() error {
 			validation.Length(3, 32).Error("The name field must be between 3 to 32 characters."),
 		),
 		validation.Field(&s.Email,
-			validation.Required.Error("The email field is required."),
+			validation.Required.When(s.ID == 0).Error("The email field is required."),
 			is.Email.Error("This email is not valid."),
 		),
 		validation.Field(&s.Roll,
-			validation.Required.Error("Student roll start from 1"),
+			validation.Required.When(s.ID == 0).Error("Student roll start from 1"),
 			validation.Min(1).Error("Student roll start from 1"),
 			validation.Max(200).Error("Only 200 Students are allowed"),
 		),

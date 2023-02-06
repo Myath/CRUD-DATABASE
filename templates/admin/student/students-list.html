@@ -54,6 +54,8 @@
                             <th scope="col">Mathematics</th>
                             <th scope="col">Grade</th>
                             <th scope="col">GPA</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -68,6 +70,7 @@
                             <td> {{ .Mathematics }} </td>
                             <td> {{ .Grade }} </td>
                             <td> {{ .GPA }} </td>
+                            <td> {{ if .Status}}Active{{else}}Inactive{{end}}</td>
                             <td>
                                 <button class="btn btn-secondary"><a href="/student/{{.ID}}/edit">Edit</a></button>
                                 <button class="btn btn-danger"><a href="/student/{{.ID}}/delete">Delete</a></button>

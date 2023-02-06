@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/go-chi/chi/v5"
-	validation "github.com/go-ozzo/ozzo-validation"
+	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/justinas/nosurf"
 )
 
@@ -23,7 +23,7 @@ func (h Handler) StudentEdit(w http.ResponseWriter, r *http.Request) {
 	var student Student
 	student.ID = uID
 
-	const editQuery = `SELECT * FROM students WHERE id = $1`
+	const editQuery = `SELECT * FROM students WHERE id = $1 AND deleted_at IS NULL`
 
 	if err := h.db.Get(&student, editQuery, uID); err != nil {
 		log.Fatal(err)
@@ -45,6 +45,7 @@ func (h Handler) StudentUpdate(w http.ResponseWriter, r *http.Request) {
 	if err := h.decoder.Decode(&student, r.PostForm); err != nil {
 		log.Fatal(err)
 	}
+
 
 	student.ID = uID
 	
@@ -71,7 +72,8 @@ func (h Handler) StudentUpdate(w http.ResponseWriter, r *http.Request) {
 			bangla = :bangla,
 			mathematics = :mathematics,
 			grade = :grade,
-			gpa = :gpa
+			gpa = :gpa,
+			status = :status
 		WHERE id = :id
 		RETURNING id;
 	`
