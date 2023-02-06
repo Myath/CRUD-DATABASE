@@ -12,13 +12,11 @@ import (
 
 func (h Handler) StudentEdit(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
-	
+
 	uID, err := strconv.Atoi(id)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	
 
 	var student Student
 	student.ID = uID
@@ -46,9 +44,7 @@ func (h Handler) StudentUpdate(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-
 	student.ID = uID
-	
 	if err := student.Validate(); err != nil {
 		if vErr, ok := err.(validation.Errors); ok {
 			student.FormError = vErr
@@ -56,8 +52,6 @@ func (h Handler) StudentUpdate(w http.ResponseWriter, r *http.Request) {
 		pharseEditStudent(w, student)
 		return
 	}
-
-	
 
 	grade, gpa := Grade(student.English, student.Bangla, student.Mathematics)
 
@@ -82,7 +76,7 @@ func (h Handler) StudentUpdate(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+
 	if err := stmt.Get(&uID, student); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -90,4 +84,3 @@ func (h Handler) StudentUpdate(w http.ResponseWriter, r *http.Request) {
 
 	http.Redirect(w, r, "/student/list", http.StatusSeeOther)
 }
-
